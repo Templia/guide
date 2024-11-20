@@ -40,7 +40,7 @@
             async function loadRedirects() {
                 try {
                     // Fetch the redirects JSON file
-                    const response = await fetch("/redirects.json");
+                    const response = await fetch("/guides.json");
                     const redirects = await response.json();
 
                     // Get the UL element to populate
