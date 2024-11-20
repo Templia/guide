@@ -1,146 +1,156 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Templia Guide</title>
-        <style>
-            /* Load the MatrixIIBook font */
-            @font-face {
-                font-family: "MatrixIIBook";
-                src: url("/fonts/MatrixIIBook.otf") format("opentype");
-                font-weight: normal;
-                font-style: normal;
-            }
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Templia Guide</title>
+    <style>
+        /* Load the MatrixIIBook font */
+        @font-face {
+            font-family: "MatrixIIBook";
+            src: url("/fonts/MatrixIIBook.otf") format("opentype");
+            font-weight: normal;
+            font-style: normal;
+        }
 
-            body {
-                font-family: "MatrixIIBook", Arial, sans-serif;
-                background-color: #f5e7d4; /* Beige background */
-                color: #000000; /* Black text */
-                text-align: center;
-                margin: 0;
-                padding: 0;
-            }
+        body {
+            font-family: "MatrixIIBook", Arial, sans-serif;
+            background-color: #f5e7d4; /* Beige background */
+            color: #000000; /* Black text */
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
 
-            h1 {
-                font-family: Arial, sans-serif; /* More modern font for header */
-                font-size: 2.5em;
-                font-weight: bold;
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-                margin-top: 40px;
-                margin-bottom: 20px;
-            }
+        h1 {
+            font-family: Arial, sans-serif; /* Modern font for header */
+            font-size: 2.5em;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
 
-            .divider {
-                width: 60%;
-                height: 2px;
-                background-color: #000000;
-                margin: 0 auto 30px auto;
-            }
+        .divider {
+            width: 60%;
+            height: 2px;
+            background-color: #000000;
+            margin: 0 auto 30px auto;
+        }
 
-            .grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 30px;
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 20px;
-            }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-            .grid-item {
-                font-size: 1.1em;
-                text-transform: uppercase;
-                line-height: 1.4;
-            }
+        .grid-item {
+            font-size: 1.1em;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
 
-            .grid-item .number {
-                font-size: 2em;
-                font-weight: bold;
-                display: block;
-                margin-bottom: 10px;
-            }
+        .grid-item .number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
 
-            .grid-item .line {
-                width: 60%;
-                height: 2px;
-                background-color: #000000;
-                margin: 10px auto;
-            }
+        .grid-item .line {
+            width: 60%;
+            height: 2px;
+            background-color: #000000;
+            margin: 10px auto;
+        }
 
-            .grid-item .description {
-                font-family: "MatrixIIBook", Arial, sans-serif;
-                font-style: italic;
-                font-size: 0.9em;
-                margin-top: 5px;
-            }
+        .grid-item .description {
+            font-family: "MatrixIIBook", Arial, sans-serif;
+            font-style: italic;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
 
-            a {
-                text-decoration: none;
-                color: #000000;
-            }
+        .grid-item .summary {
+            font-family: "MatrixIIBook", Arial, sans-serif;
+            font-size: 0.8em;
+            margin-top: 5px;
+            color: #333333;
+        }
 
-            a:hover {
-                text-decoration: underline;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Templia Guide</h1>
-        <div class="divider"></div>
-        <div class="grid" id="redirects-grid"></div>
+        a {
+            text-decoration: none;
+            color: #000000;
+        }
 
-        <script>
-            async function loadGuides() {
-                try {
-                    const response = await fetch("/guides.json");
-                    const guides = await response.json();
-                    const grid = document.getElementById("redirects-grid");
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Templia Guide</h1>
+    <div class="divider"></div>
+    <div class="grid" id="redirects-grid"></div>
 
-                    let index = 1; // Counter for numbering the grid items
-                    for (const [path, url] of Object.entries(guides)) {
-                        const gridItem = document.createElement("div");
-                        gridItem.classList.add("grid-item");
+    <script>
+        async function loadGuides() {
+            try {
+                const response = await fetch("/guides.json");
+                const guides = await response.json();
+                const grid = document.getElementById("redirects-grid");
 
-                        // Extract the path name for display
-                        const pathName = path
-                            .replace(/\//g, "")
-                            .replace(/-/g, " ")
-                            .replace(/^\w/, (c) => c.toUpperCase());
+                let index = 1; // Counter for numbering the grid items
+                for (const [path, data] of Object.entries(guides)) {
+                    const gridItem = document.createElement("div");
+                    gridItem.classList.add("grid-item");
 
-                        // Number (e.g., 01, 02)
-                        const number = document.createElement("span");
-                        number.classList.add("number");
-                        number.textContent = index.toString().padStart(2, "0");
+                    // Extract title from URL (e.g., "Firepit" from the URL)
+                    const title = data.url.split("/").pop().split("-").join(" ").replace(/.*/, s => s.charAt(0).toUpperCase() + s.slice(1));
 
-                        // Line separator
-                        const line = document.createElement("div");
-                        line.classList.add("line");
+                    // Number (e.g., 01, 02)
+                    const number = document.createElement("span");
+                    number.classList.add("number");
+                    number.textContent = index.toString().padStart(2, "0");
 
-                        // Description
-                        const description = document.createElement("span");
-                        description.classList.add("description");
-                        description.textContent = pathName;
+                    // Line separator
+                    const line = document.createElement("div");
+                    line.classList.add("line");
 
-                        // Link
-                        const link = document.createElement("a");
-                        link.href = path;
-                        link.appendChild(number);
-                        link.appendChild(line);
-                        link.appendChild(description);
+                    // Title
+                    const desc = document.createElement("span");
+                    desc.classList.add("description");
+                    desc.textContent = title;
 
-                        gridItem.appendChild(link);
-                        grid.appendChild(gridItem);
+                    // Summary
+                    const summary = document.createElement("div");
+                    summary.classList.add("summary");
+                    summary.textContent = data.summary;
 
-                        index++; // Increment counter
-                    }
-                } catch (error) {
-                    console.error("Failed to load guides.json:", error);
-                    document.body.innerHTML = "<h1>Error Loading Guides</h1>";
+                    // Link
+                    const link = document.createElement("a");
+                    link.href = path;
+                    link.appendChild(number);
+                    link.appendChild(line);
+                    link.appendChild(desc);
+                    link.appendChild(summary);
+
+                    gridItem.appendChild(link);
+                    grid.appendChild(gridItem);
+
+                    index++; // Increment counter
                 }
+            } catch (error) {
+                console.error("Failed to load guides.json:", error);
+                document.body.innerHTML = "<h1>Error Loading Guides</h1>";
             }
+        }
 
-            loadGuides();
-        </script>
-    </body>
+        loadGuides();
+    </script>
+</body>
 </html>
