@@ -5,30 +5,35 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Redirecting...</title>
         <script>
-            // Define the dynamic redirects
-            const redirects = {
-                "/firepit":
-                    "https://soapy-turnip-a11.notion.site/Firepit-13e22d65385f8050a189f50a3e0be199",
-                "/water-heater":
-                    "https://soapy-turnip-a11.notion.site/Water-heater-14322d65385f80c99728f7cf28be5c30",
-                "/lock":
-                    "https://soapy-turnip-a11.notion.site/Locks-14322d65385f8058bc89f7b88c57b4db",
-            };
+            // Function to handle redirects
+            async function handleRedirect() {
+                try {
+                    // Fetch the redirects JSON file
+                    const response = await fetch("/redirects.json");
+                    const redirects = await response.json();
 
-            // Get the current path
-            const path = window.location.pathname;
+                    // Get the current path
+                    const path = window.location.pathname;
 
-            // Check if the path matches a redirect
-            if (redirects[path]) {
-                // Redirect to the destination
-                window.location.href = redirects[path];
-            } else {
-                // Display an error if no match is found
-                document.body.innerHTML = `
-                <h1>404 - Page Not Found</h1>
-                <p>The requested page <code>${path}</code> does not exist.</p>
-            `;
+                    // Check if the path matches a redirect
+                    if (redirects[path]) {
+                        // Redirect to the destination
+                        window.location.href = redirects[path];
+                    } else {
+                        // If no match, display a 404-like message
+                        document.body.innerHTML = `
+                        <h1>404 - Page Not Found</h1>
+                        <p>The requested page <code>${path}</code> does not exist.</p>
+                    `;
+                    }
+                } catch (error) {
+                    console.error("Failed to load redirects.json:", error);
+                    document.body.innerHTML = `<h1>404 - Page Not Found</h1><p>An error occurred.</p>`;
+                }
             }
+
+            // Execute the redirect logic
+            handleRedirect();
         </script>
     </head>
     <body></body>
