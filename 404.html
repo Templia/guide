@@ -4,43 +4,33 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Redirecting...</title>
-        <script>async function loadGuides() {
-            try {
-                // Fetch the guides JSON file
-                const response = await fetch("/guides.json");
-                const guides = await response.json();
-        
-                // Get the UL element to populate
-                const list = document.getElementById("redirects-list");
-        
-                // Loop through the guides and add them as list items
-                for (const [path, guideData] of Object.entries(guides)) {
-                    if (!guideData.url || !guideData.summary) {
-                        console.warn(`Guide at path ${path} is missing required fields.`);
-                        continue;
+        <script>
+            // Function to handle redirects
+            async function handleRedirect() {
+                try {
+                    // Fetch the guides JSON file
+                    const response = await fetch("/guides.json");
+                    const guides = await response.json();
+
+                    // Get the current path
+                    const path = window.location.pathname;
+
+                    // Check if the path matches a redirect
+                    if (guides[path] && guides[path].url) {
+                        // Redirect to the destination URL
+                        window.location.href = guides[path].url;
+                    } else {
+                        // If no match, display a 404-like message
+                        document.body.innerHTML = `
+                            <h1>404 - Page Not Found</h1>
+                            <p>The requested page <code>${path}</code> does not exist.</p>
+                        `;
                     }
-        
-                    const listItem = document.createElement("li");
-                    const link = document.createElement("a");
-                    const summary = document.createElement("div");
-        
-                    // Set the link to the correct URL
-                    link.href = guideData.url; // Use the external URL for the link
-                    link.textContent = path; // Display the path as the link text
-        
-                    // Set the summary content
-                    summary.textContent = guideData.summary;
-                    summary.classList.add("summary");
-        
-                    listItem.appendChild(link); // Add the link to the list item
-                    listItem.appendChild(summary); // Add the summary below the link
-                    list.appendChild(listItem); // Add the list item to the UL
+                } catch (error) {
+                    console.error("Failed to load guides.json:", error);
+                    document.body.innerHTML = `<h1>404 - Page Not Found</h1><p>An error occurred.</p>`;
                 }
-            } catch (error) {
-                console.error("Failed to load guides.json:", error);
-                document.body.innerHTML = "<h1>Error Loading Guides</h1>";
             }
-        }
         </script>
     </head>
     <body></body>
