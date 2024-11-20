@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Templia Guides</title>
+        <title>Templia Guide</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -16,8 +16,8 @@
                 text-align: center;
             }
             ul {
-                list-style: none;
-                padding: 0;
+                list-style: disc;
+                padding-left: 20px;
             }
             li {
                 margin: 10px 0;
@@ -33,37 +33,42 @@
     </head>
     <body>
         <h1>Templia Guides</h1>
-        <p>Below is a list of available guides. Click a link to navigate:</p>
         <ul id="redirects-list"></ul>
 
         <script>
-            async function loadRedirects() {
+            async function loadGuides() {
                 try {
-                    // Fetch the redirects JSON file
+                    // Fetch the guides JSON file
                     const response = await fetch("/guides.json");
-                    const redirects = await response.json();
+                    const guides = await response.json();
 
                     // Get the UL element to populate
                     const list = document.getElementById("redirects-list");
 
-                    // Loop through the redirects and add them as list items
-                    for (const [path, url] of Object.entries(redirects)) {
+                    // Loop through the guides and add them as list items
+                    for (const [path, url] of Object.entries(guides)) {
                         const listItem = document.createElement("li");
                         const link = document.createElement("a");
-                        link.href = path; // Use the local path for links
-                        link.textContent = `${path} → ${url}`;
+
+                        // Extract the path name (e.g., 'firepit', 'water-heater') for display
+                        const pathName = path
+                            .replace(/\//g, "")
+                            .replace(/-/g, " ")
+                            .replace(/^\w/, (c) => c.toUpperCase());
+
+                        link.href = path; // Use the local path for the link
+                        link.textContent = pathName; // Display the path name as the link text
                         listItem.appendChild(link);
                         list.appendChild(listItem);
                     }
                 } catch (error) {
-                    console.error("Failed to load redirects:", error);
-                    document.body.innerHTML =
-                        "<h1>Error Loading Redirects</h1>";
+                    console.error("Failed to load guides.json:", error);
+                    document.body.innerHTML = "<h1>Error Loading Guides</h1>";
                 }
             }
 
-            // Load the redirects on page load
-            loadRedirects();
+            // Load the guides on page load
+            loadGuides();
         </script>
     </body>
 </html>
