@@ -1,37 +1,41 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Redirecting...</title>
-        <script>
-            // Function to handle redirects
-            async function handleRedirect() {
-                try {
-                    // Fetch the guides JSON file
-                    const response = await fetch("/guides.json");
-                    const guides = await response.json();
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script>
+        // Function to handle redirects
+        async function handleRedirect() {
+            try {
+                // Fetch the redirects JSON file
+                const response = await fetch('/redirects.json');
+                const redirects = await response.json();
 
-                    // Get the current path
-                    const path = window.location.pathname;
+                // Get the current path
+                const path = window.location.pathname;
 
-                    // Check if the path matches a redirect
-                    if (guides[path] && guides[path].url) {
-                        // Redirect to the destination URL
-                        window.location.href = guides[path].url;
-                    } else {
-                        // If no match, display a 404-like message
-                        document.body.innerHTML = `
-                            <h1>404 - Page Not Found</h1>
-                            <p>The requested page <code>${path}</code> does not exist.</p>
-                        `;
-                    }
-                } catch (error) {
-                    console.error("Failed to load guides.json:", error);
-                    document.body.innerHTML = `<h1>404 - Page Not Found</h1><p>An error occurred.</p>`;
+                // Check if the path matches a redirect
+                if (redirects[path]) {
+                    // Redirect to the destination
+                    window.location.href = redirects[path];
+                } else {
+                    // If no match, display a 404-like message
+                    document.body.innerHTML = `
+                        <h1>404 - Page Not Found</h1>
+                        <p>The requested page <code>${path}</code> does not exist.</p>
+                    `;
                 }
+            } catch (error) {
+                console.error("Failed to load redirects.json:", error);
+                document.body.innerHTML = `<h1>404 - Page Not Found</h1><p>An error occurred.</p>`;
             }
-        </script>
-    </head>
-    <body></body>
+        }
+
+        // Execute the redirect logic
+        handleRedirect();
+    </script>
+</head>
+<body>
+</body>
 </html>
