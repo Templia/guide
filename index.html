@@ -28,7 +28,6 @@
                 font-size: 3em; /* Larger heading size */
                 font-weight: bold; /* Keep Templia bold */
             }
-
             h1 span {
                 font-weight: normal; /* Make Guide regular (not bold) */
             }
@@ -53,13 +52,6 @@
             a:hover {
                 text-decoration: underline;
             }
-
-            .summary {
-                font-size: 0.8em;
-                color: #555555;
-                font-style: italic;
-                margin-top: 5px;
-            }
         </style>
     </head>
     <body>
@@ -77,28 +69,20 @@
                     const list = document.getElementById("redirects-list");
 
                     // Loop through the guides and add them as list items
-                    for (const [path, data] of Object.entries(guides)) {
+                    for (const [path, url] of Object.entries(guides)) {
                         const listItem = document.createElement("li");
                         const link = document.createElement("a");
-                        const summary = document.createElement("div");
 
-                        // Extract the path name for display
+                        // Extract the path name (e.g., 'firepit', 'water-heater') for display
                         const pathName = path
                             .replace(/\//g, "")
                             .replace(/-/g, " ")
                             .replace(/^\w/, (c) => c.toUpperCase());
 
-                        // Set link properties
                         link.href = path; // Use the local path for the link
                         link.textContent = pathName; // Display the path name as the link text
-
-                        // Set the summary content
-                        summary.textContent = data.summary;
-                        summary.classList.add("summary");
-
-                        listItem.appendChild(link); // Add the link to the list item
-                        listItem.appendChild(summary); // Add the summary below the link
-                        list.appendChild(listItem); // Add the list item to the UL
+                        listItem.appendChild(link);
+                        list.appendChild(listItem);
                     }
                 } catch (error) {
                     console.error("Failed to load guides.json:", error);
